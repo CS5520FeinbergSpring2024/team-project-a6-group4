@@ -69,7 +69,6 @@ import android.widget.Toast;
 public class CreatePost extends AppCompatActivity {
     private String userId;
     private String selectedCommunity;
-
     EditText editTextTime, editTextDate, editTextEventTitle, editTextEventDesc;
     private EditText editTextLocation;
     private Spinner eventTagSpinner;
@@ -153,31 +152,6 @@ public class CreatePost extends AppCompatActivity {
             }
         });
 
-
-        // Initialize Places API
-//        Places.initialize(getApplicationContext(), "AIzaSyA582883yurIhpxcYWZcLr6b_a7tQMDPBI");
-//        placesClient = Places.createClient(this);
-//
-//        // Initialize Autocomplete fragment
-//        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-//
-//        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-//        autocompleteFragment.setHint("Event location");
-
-//        autocompleteFragment.setOnPlaceSelectedListener(new AutocompleteSupportFragment.OnPlaceSelectedListener() {
-//            @Override
-//            public void onPlaceSelected(@NonNull Place place) {
-//                // Set the selected location in the EditText field
-//                editTextLocation.setText(place.getName());
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Status status) {
-//                // Handle error
-//            }
-//        });
-
         // Retrieve user's email address from intent
         String userEmail = getIntent().getStringExtra("userEmail");
         userId=getIntent().getStringExtra("userId");
@@ -240,10 +214,10 @@ public class CreatePost extends AppCompatActivity {
 
         Date postedDate=currentDate;
         String eventLocation=editTextLocation.getText().toString().trim();
-        String picture="mock url";
+        String picture="https://firebasestorage.googleapis.com/v0/b/numad24sp-group4unilink.appspot.com/o/event_pics%2Fevent.avif?alt=media&token=5a12990b-6d69-4fa4-8dd4-5f89d90848de";
         String tag=selectedCommunity;
 
-        String eventCreator = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        //String eventCreator = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         // Assemble the event
         Map<String, Object> event = new HashMap<>();
         event.put("title", title);
@@ -290,26 +264,11 @@ public class CreatePost extends AppCompatActivity {
     }
 
     private void pickImage() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        imagePickerLauncher.launch(intent);
-//        Log.d("pickImage", "Called function.");
 
         imagePickerLauncher.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
         Log.d("pickImage", "Called function.");
-//        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//            if (result.getResultCode() == Activity.RESULT_OK) {
-//                Intent data = result.getData();
-//                if (data != null) {
-//                    selectedImageUri = data.getData();
-//                    eventImage.setImageURI(selectedImageUri);
-//                }
-//            } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
-//                // Handle cancellation if needed
-//                Log.d("pickImage", "cancrllled function.");
-//            }
-//        });
 
     }
     private void updateEventWithImageUrl(String documentId, String imageUrl) {

@@ -5,13 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".posts.CreatePost">
+    tools:context=".posts.EditPost">
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="350dp"
         android:layout_height="30dp"
-        android:text="Create a new post"
+        android:text="EDIT POST : "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/eventImage"
@@ -113,5 +114,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

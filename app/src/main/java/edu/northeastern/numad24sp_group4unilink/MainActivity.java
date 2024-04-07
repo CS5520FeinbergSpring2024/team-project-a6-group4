@@ -12,6 +12,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import edu.northeastern.numad24sp_group4unilink.posts.CreatePost;
+import edu.northeastern.numad24sp_group4unilink.posts.EditAllPosts;
+import edu.northeastern.numad24sp_group4unilink.posts.EditPost;
+import edu.northeastern.numad24sp_group4unilink.posts.ViewAllPosts;
+import edu.northeastern.numad24sp_group4unilink.posts.ViewPostActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,4 +47,23 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("userId", userId);
         startActivity(intent);
     }
+
+    public void launchEditPostActivity(View view) {
+        Intent intent = new Intent(this, EditAllPosts.class);
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String userId= getIntent().getStringExtra("userId");
+        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+    public void launchViewPostActivity(View view) {
+        Intent intent = new Intent(this, ViewAllPosts.class);
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String userId= getIntent().getStringExtra("userId");
+        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+
+
 }
