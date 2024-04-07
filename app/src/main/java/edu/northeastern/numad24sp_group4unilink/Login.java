@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String email, password;
+    private String userId;
     private EditText emailText, passwordText;
     private ProgressBar progressBar;
 
@@ -63,7 +64,8 @@ public class Login extends AppCompatActivity {
                                         Toast.makeText(Login.this, "Sign in is successful.",
                                                 Toast.LENGTH_SHORT).show();
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        homepage();
+
+                                        homepage(user.getEmail(), user.getUid());
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w("Firebase", "signInWithEmail:failure", task.getException());
@@ -93,12 +95,14 @@ public class Login extends AppCompatActivity {
             // Check if user is signed in (non-null) and update UI accordingly.
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if(currentUser != null){
-                homepage();
+                homepage(currentUser.getEmail(), currentUser.getUid());
             }
         }
 
-    public void homepage() {
+    public void homepage(String userEmail, String userId) {
         Intent intent = new Intent(Login.this, MainActivity.class);
+        intent.putExtra("userEmail", userEmail);
+        intent.putExtra("userId", userId);
         startActivity(intent);
         finish();
     }
