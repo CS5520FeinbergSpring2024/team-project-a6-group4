@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.northeastern.numad24sp_group4unilink.R;
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
 
 public class ViewPostActivity extends AppCompatActivity {
 
@@ -67,11 +70,36 @@ public class ViewPostActivity extends AppCompatActivity {
         // Trigger function to populate UI with Firestore data
         populateFieldsFromFirestore();
 
+        // Assuming you have already initialized eventlocation TextView
+        eventlocation.setOnClickListener(v -> {
+            String locationQuery = eventlocation.getText().toString();
+            Log.d("loc to open:", " is "+locationQuery);
+            if (!locationQuery.isEmpty()) {
+                // Create a Uri for the Google Maps search query
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(locationQuery));
+
+                // Create an Intent to launch Google Maps with the search query
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps"); // Specify package to ensure Maps app is used
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    // Handle the case where Google Maps app is not installed
+                    Toast.makeText(this, "Google Maps app not installed.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Handle the case where location query is empty
+                Toast.makeText(this, "Location not available.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
     }
 
 
@@ -113,7 +141,7 @@ public class ViewPostActivity extends AppCompatActivity {
                         Picasso.get()
                                 .load(imageUrl)
                                 .placeholder(R.drawable.event) // Optional placeholder image
-                                .error(R.drawable.error) // Optional error image
+                                .error(R.drawable.event) // Optional error image
                                 .into(eventImage);
                     }
                 }

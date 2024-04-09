@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <queries>
+        <package android:name="com.google.android.apps.maps" />
+        <!-- Add more packages as needed -->
+    </queries>
+
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyA582883yurIhpxcYWZcLr6b_a7tQMDPBI" />
