@@ -1,4 +1,4 @@
-package edu.northeastern.numad24sp_group4unilink.posts;
+package edu.northeastern.numad24sp_group4unilink.community;
 
 import android.os.Bundle;
 
@@ -10,13 +10,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import edu.northeastern.numad24sp_group4unilink.R;
 
-public class DeleteSomeCommunity extends AppCompatActivity {
+public class CreateCommunityActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_delete_some_community);
+        setContentView(R.layout.activity_create_community);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

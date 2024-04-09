@@ -26,10 +26,16 @@
         android:theme="@style/Theme.NUMAD24Sp_Group4UniLink"
         tools:targetApi="31">
         <activity
-            android:name=".posts.DeleteSomeCommunity"
+            android:name=".community.ViewACommunity"
             android:exported="false" />
         <activity
-            android:name=".posts.CreateCommunityActivity"
+            android:name=".community.ViewCommunities"
+            android:exported="false" />
+        <activity
+            android:name=".community.DeleteSomeCommunity"
+            android:exported="false" />
+        <activity
+            android:name=".community.CreateCommunityActivity"
             android:exported="false" />
         <activity
             android:name=".posts.DeleteAnyOfYourPosts"

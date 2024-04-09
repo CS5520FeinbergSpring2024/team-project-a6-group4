@@ -60,38 +60,54 @@
         android:id="@+id/deletePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Post"
         android:onClick="launchDeletePostActivity"
+        android:text="Delete Post"
+        app:layout_constraintBottom_toTopOf="@+id/viewCommunitiesButton"
+        app:layout_constraintEnd_toEndOf="@+id/viewCommunitiesButton"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="@+id/viewCommunitiesButton"
+        app:layout_constraintTop_toBottomOf="@+id/ViewPostButton"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <Button
+        android:id="@+id/viewCommunitiesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="4dp"
+        android:onClick="launchViewCommunityActivity"
+        android:text="View communities"
         app:layout_constraintBottom_toTopOf="@+id/createCommunity"
         app:layout_constraintEnd_toEndOf="@+id/createCommunity"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="@+id/createCommunity"
-        app:layout_constraintTop_toBottomOf="@+id/ViewPostButton"
+        app:layout_constraintTop_toBottomOf="@+id/deletePost"
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/createCommunity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create community"
         android:onClick="launchCreateCommunityActivity"
+        android:text="Create community"
         app:layout_constraintBottom_toTopOf="@+id/deleteCommunity"
         app:layout_constraintEnd_toEndOf="@+id/deleteCommunity"
         app:layout_constraintStart_toStartOf="@+id/deleteCommunity"
-        app:layout_constraintTop_toBottomOf="@+id/deletePost"
+        app:layout_constraintTop_toBottomOf="@+id/viewCommunitiesButton"
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/deleteCommunity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Community"
         android:onClick="launchDeleteCommunityActivity"
+        android:text="Delete Community"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createCommunity"
         app:layout_constraintVertical_bias="0.5" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
