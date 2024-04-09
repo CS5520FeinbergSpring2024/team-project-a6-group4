@@ -91,14 +91,14 @@ public class ViewAllPosts extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_edit_all_posts);
+        setContentView(R.layout.activity_view_all_posts);
         userEmail = getIntent().getStringExtra("userEmail");
         userId=getIntent().getStringExtra("userId");
         TextView userEmailTextView = findViewById(R.id.textView3);
         userEmailTextView.setText("Select which post to edit: as User : " + userEmail+" id:"+userId);
 
         selectPostSpinner = findViewById(R.id.selectPost);
-        startEditButton= findViewById(R.id.buttonEditPost);
+        startEditButton= findViewById(R.id.buttonViewPost);
         postTitlesAndIds = new HashMap<>();
 
         // Populate spinner with post titles

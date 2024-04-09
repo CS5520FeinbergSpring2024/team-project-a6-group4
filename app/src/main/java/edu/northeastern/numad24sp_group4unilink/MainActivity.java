@@ -11,7 +11,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import edu.northeastern.numad24sp_group4unilink.posts.CreateCommunityActivity;
 import edu.northeastern.numad24sp_group4unilink.posts.CreatePost;
+import edu.northeastern.numad24sp_group4unilink.posts.DeleteAnyOfYourPosts;
+import edu.northeastern.numad24sp_group4unilink.posts.DeleteSomeCommunity;
 import edu.northeastern.numad24sp_group4unilink.posts.EditAllPosts;
 import edu.northeastern.numad24sp_group4unilink.posts.EditPost;
 import edu.northeastern.numad24sp_group4unilink.posts.ViewAllPosts;
@@ -58,6 +61,33 @@ public class MainActivity extends AppCompatActivity {
     }
     public void launchViewPostActivity(View view) {
         Intent intent = new Intent(this, ViewAllPosts.class);
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String userId= getIntent().getStringExtra("userId");
+        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+
+    public void launchDeletePostActivity(View view) {
+        Intent intent = new Intent(this, DeleteAnyOfYourPosts.class);
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String userId= getIntent().getStringExtra("userId");
+        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+
+    public void launchCreateCommunityActivity(View view) {
+        Intent intent = new Intent(this, CreateCommunityActivity.class);
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String userId= getIntent().getStringExtra("userId");
+        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+    }
+
+    public void launchDeleteCommunityActivity(View view){
+        Intent intent = new Intent(this, DeleteSomeCommunity.class);
         String userEmail = getIntent().getStringExtra("userEmail");
         String userId= getIntent().getStringExtra("userId");
         intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
