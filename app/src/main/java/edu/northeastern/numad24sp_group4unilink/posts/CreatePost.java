@@ -118,7 +118,7 @@ public class CreatePost extends AppCompatActivity {
 
         CollectionReference communitiesRef = db.collection("communities");
 
-      //SPINNER
+        //SPINNER
         eventTagSpinner = findViewById(R.id.eventTag);
 
         communitiesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {

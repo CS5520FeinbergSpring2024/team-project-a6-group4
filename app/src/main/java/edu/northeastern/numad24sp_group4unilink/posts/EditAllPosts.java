@@ -1,8 +1,12 @@
 package edu.northeastern.numad24sp_group4unilink.posts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,7 +21,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.northeastern.numad24sp_group4unilink.R;
 
@@ -27,6 +33,8 @@ public class EditAllPosts extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private String userId, userEmail;
+    private Map<String, String> postTitlesAndIds;
+    private Button startEditButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +47,23 @@ public class EditAllPosts extends AppCompatActivity {
         userEmailTextView.setText("Select which post to edit: as User : " + userEmail+" id:"+userId);
 
         selectPostSpinner = findViewById(R.id.selectPost);
+        startEditButton= findViewById(R.id.buttonEditPost);
+        postTitlesAndIds = new HashMap<>();
 
         // Populate spinner with post titles
         populatePostTitlesSpinner();
+
+        // Set an OnClickListener for the startEditButton
+        startEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the selected title and corresponding ID
+                String selectedTitle = (String) selectPostSpinner.getSelectedItem();
+                String selectedId = postTitlesAndIds.get(selectedTitle);
+                // Start the next activity with the selected ID
+                startNextEditActivity(selectedId);
+            }
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -51,6 +73,7 @@ public class EditAllPosts extends AppCompatActivity {
         });
     }
 
+    //to find only the logged in user's posts, can be used in profile/my posts so he/she can edit it
     private void populatePostTitlesSpinner() {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("posts");
@@ -63,8 +86,11 @@ public class EditAllPosts extends AppCompatActivity {
             for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                 // Assuming 'title' is the attribute in your posts collection
                 String title = document.getString("title");
+                String postId = document.getId();
                 if (title != null && !title.isEmpty() && !postTitles.contains(title)) {
                     postTitles.add(title);
+                    // Add title and ID to the map
+                    postTitlesAndIds.put(title, postId);
                 }
             }
             // Populate the spinner with post titles
@@ -76,5 +102,13 @@ public class EditAllPosts extends AppCompatActivity {
             // Handle failure to retrieve posts
             Log.e("Firestore", "Error getting posts: ", e);
         });
+    }
+
+    private void startNextEditActivity(String postId) {
+        Intent intent = new Intent(EditAllPosts.this, EditPost.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("userEmail", userEmail);
+        intent.putExtra("postId", postId);
+        startActivity(intent);
     }
 }

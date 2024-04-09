@@ -53,4 +53,5 @@ dependencies {
     //implementation ("com.google.android.libraries.places:places:2.4.0")
 //    implementation ("com.google.android.libraries.places:places:2.7.0")
 //    implementation("com.google.android.libraries.places:places-widgets:2.7.0")
+    implementation("com.squareup.picasso:picasso:2.71828")
 }

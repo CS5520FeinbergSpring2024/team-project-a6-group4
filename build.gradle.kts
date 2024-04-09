@@ -20,3 +20,9 @@ plugins {
 //        // Other repositories if needed
 //    }
 //}
+//allprojects {
+//    repositories {
+//        // Other repositories
+//        maven { url("https://jitpack.io") }
+//    }
+//}
