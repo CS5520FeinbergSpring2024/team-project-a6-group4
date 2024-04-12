@@ -15,7 +15,6 @@ import edu.northeastern.numad24sp_group4unilink.community.CreateCommunityActivit
 import edu.northeastern.numad24sp_group4unilink.community.ViewCommunities;
 import edu.northeastern.numad24sp_group4unilink.posts.CreatePost;
 import edu.northeastern.numad24sp_group4unilink.posts.DeleteAnyOfYourPosts;
-import edu.northeastern.numad24sp_group4unilink.community.DeleteSomeCommunity;
 import edu.northeastern.numad24sp_group4unilink.posts.EditAllPosts;
 import edu.northeastern.numad24sp_group4unilink.posts.ViewAllPosts;
 
@@ -87,15 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchCreateCommunityActivity(View view) {
         Intent intent = new Intent(this, CreateCommunityActivity.class);
-        String userEmail = getIntent().getStringExtra("userEmail");
-        String userId= getIntent().getStringExtra("userId");
-        intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
-        intent.putExtra("userId", userId);
-        startActivity(intent);
-    }
-
-    public void launchDeleteCommunityActivity(View view){
-        Intent intent = new Intent(this, DeleteSomeCommunity.class);
         String userEmail = getIntent().getStringExtra("userEmail");
         String userId= getIntent().getStringExtra("userId");
         intent.putExtra("userEmail", userEmail); // Pass the user's email address to CreatePost activity
