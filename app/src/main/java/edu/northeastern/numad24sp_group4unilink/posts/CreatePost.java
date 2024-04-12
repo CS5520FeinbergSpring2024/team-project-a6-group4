@@ -244,10 +244,6 @@ public class CreatePost extends AppCompatActivity {
 //                            .addOnFailureListener(e -> Log.e(TAG, "Error adding event to hosting array", e));
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to create event.", Toast.LENGTH_SHORT).show());
-
-
-
-
     }
 
     private void checkPermissionAndPickImage() {
