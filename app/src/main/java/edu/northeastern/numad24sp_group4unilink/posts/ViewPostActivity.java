@@ -93,6 +93,11 @@ public class ViewPostActivity extends AppCompatActivity {
             }
         });
 
+        Attend.setOnClickListener(v -> {
+            // Check if the current user is already attending the post
+            checkIfAttendingPost();
+        });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -148,6 +153,49 @@ public class ViewPostActivity extends AppCompatActivity {
             } else {
                 // Handle errors while fetching data
                 Log.e("Firestore", "Error getting sent post from DB ");
+            }
+        });
+    }
+
+    private void checkIfAttendingPost() {
+        //THIS FUNCTION LITERALLY ADDS THE LOGGED IN USER TO THE EVEMNT"S LIST OF ATTENDEES
+        // Reference to the post document in Firestore
+        CollectionReference postsRef = db.collection("posts");
+        postsRef.document(postId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Get the current attendees array
+                    @SuppressWarnings("unchecked")
+                    List<String> attendees = (List<String>) document.get("attendees");
+                    if (attendees == null) {
+                        attendees = new ArrayList<>();
+                    }
+
+                    // Check if the current user is already attending the post
+                    if (!attendees.contains(userId)) {
+                        // Add the current user to the attendees array
+                        attendees.add(userId);
+
+                        // Update the attendees array in Firestore
+                        postsRef.document(postId).update("attendees", attendees).addOnSuccessListener(aVoid -> {
+                            // Attendee added successfully
+                            Toast.makeText(this, "You are now attending the event.", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(e -> {
+                            // Failed to update attendees array
+                            Toast.makeText(this, "Failed to attend the event. Please try again.", Toast.LENGTH_SHORT).show();
+                        });
+                    } else {
+                        // User is already attending the post
+                        Toast.makeText(this, "You are already attending this event.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Post document doesn't exist
+                    Toast.makeText(this, "Event not found.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Error getting post document
+                Toast.makeText(this, "Error getting post information. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }

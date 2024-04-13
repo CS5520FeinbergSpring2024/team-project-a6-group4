@@ -43,7 +43,7 @@ public class ViewAllPosts extends AppCompatActivity {
         userEmail = getIntent().getStringExtra("userEmail");
         userId=getIntent().getStringExtra("userId");
         TextView userEmailTextView = findViewById(R.id.textView3);
-        userEmailTextView.setText("Select which post to edit: as User : " + userEmail+" id:"+userId);
+        userEmailTextView.setText("Select which post to view: as User : " + userEmail+" id:"+userId);
 
         selectPostSpinner = findViewById(R.id.selectPost);
         startEditButton= findViewById(R.id.buttonViewPost);
