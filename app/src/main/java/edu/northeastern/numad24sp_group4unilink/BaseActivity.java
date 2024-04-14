@@ -112,7 +112,6 @@ public abstract class BaseActivity extends AppCompatActivity{
             intentHelper(MessagesActivity.class);
 
         } else if (itemId == R.id.logout) {
-
             FirebaseAuth.getInstance().signOut();
             finish();
             intentHelper(Login.class);

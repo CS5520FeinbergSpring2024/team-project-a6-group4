@@ -21,4 +21,8 @@
     <string name="post_description_">Post Description</string>
     <string name="post_image">post_image</string>
     <string name="sent">Send</string>
+    <string name="event_post_title">Event/Post Title</string>
+    <string name="this_is_a_description_of_the_event_or_post">This is a description of the event or post.</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
+
 </resources>
