@@ -96,27 +96,6 @@ public class ViewACommunity extends AppCompatActivity {
         });
     }
 
-//    private void populateSpinnerUsers() {
-//        db.collection("communities").whereEqualTo("tag", commTag).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                List<String> usersList = new ArrayList<>();
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    List<String> users = (List<String>) document.get("users");
-//                    if (users != null) {
-//                        usersList.addAll(users);
-//                    }
-//                }
-//                ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-//                        android.R.layout.simple_spinner_item, usersList);
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spinnerUsers.setAdapter(adapter);
-//            } else {
-//                // Handle failure to retrieve users
-//                Toast.makeText(getApplicationContext(), "Failed to retrieve users", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     private void populateSpinnerUsers() {
         userIdToEmailMap = new HashMap<>();
         List<String> userIdsL=new ArrayList<>();

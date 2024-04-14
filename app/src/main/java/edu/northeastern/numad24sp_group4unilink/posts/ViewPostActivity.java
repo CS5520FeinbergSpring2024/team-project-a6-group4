@@ -1,5 +1,6 @@
 package edu.northeastern.numad24sp_group4unilink.posts;
 
+import edu.northeastern.numad24sp_group4unilink.comments.Comment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
@@ -43,7 +46,7 @@ public class ViewPostActivity extends AppCompatActivity {
     private ImageView eventImage;
     private Button Attend, Comment;
     private Spinner attendeesSpinner;
-    String postId, userId;
+    String postId, userId, userEmail;
     FirebaseFirestore db;
     CollectionReference communitiesRef;
     String selectedCommunity;
@@ -57,6 +60,7 @@ public class ViewPostActivity extends AppCompatActivity {
         // Get the post ID from the intent
         postId = getIntent().getStringExtra("postId");
         userId = getIntent().getStringExtra("userId");
+        userEmail = getIntent().getStringExtra("userEmail");
 
         eventTitle=findViewById(R.id.eventTitle);
         eventDesc=findViewById(R.id.eventDesc);
@@ -103,6 +107,10 @@ public class ViewPostActivity extends AppCompatActivity {
         Attend.setOnClickListener(v -> {
             // Check if the current user is already attending the post
             checkIfAttendingPost();
+        });
+
+        Comment.setOnClickListener(v -> {
+            showCommentDialog();
         });
 
 
@@ -263,48 +271,59 @@ public class ViewPostActivity extends AppCompatActivity {
         });
     }
 
+    private void showCommentDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_comment, null);
+        EditText editTextComment = dialogView.findViewById(R.id.editTextComment);
 
-    private void populateAttendeesSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        attendeesSpinner.setAdapter(adapter);
-
-        // Get the attendees for the specified post ID
-        db.collection("posts").document(postId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Get the list of attendee user IDs
-                    List<String> attendees = (List<String>) document.get("attendees");
-                    Log.v("attendees list: ",""+attendees );
-                    if (attendees != null && !attendees.isEmpty()) {
-                        // Query the users collection to get names for each attendee ID
-                        for (String attendeeId : attendees) {
-                            db.collection("users").document(attendeeId).get().addOnCompleteListener(userTask -> {
-                                if (userTask.isSuccessful()) {
-                                    DocumentSnapshot userDocument = userTask.getResult();
-                                    if (userDocument.exists()) {
-                                        String userEmail = userDocument.getString("email");
-                                        Log.v("attendee: ",""+userEmail );
-                                        if (userEmail != null && !userEmail.isEmpty()) {
-                                            adapter.add(userEmail);
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                } else {
-                                    // Handle failure to retrieve attendee's email
-                                    Log.e("populateAttendeesSpinner", "Error getting attendee's email: " + userTask.getException());
-                                }
-                            });
-                        }
+        builder.setView(dialogView)
+                .setTitle("Post a Comment")
+                .setPositiveButton("Post", (dialog, which) -> {
+                    String commentText = editTextComment.getText().toString().trim();
+                    if (!commentText.isEmpty()) {
+                        postComment(commentText);
+                    } else {
+                        Toast.makeText(this, "Please enter a comment.", Toast.LENGTH_SHORT).show();
                     }
-                }
-            } else {
-                // Handle failure to retrieve post document
-                Log.e("populateAttendeesSpinner", "Error getting post document: " + task.getException());
-            }
-        });
+                })
+                .setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
+    private void postComment(String commentText) {
+        // Create a new comment document in Firestore
+        // Create a Map to represent the comment data
+        Map<String, Object> commentData = new HashMap<>();
+        commentData.put("userId", userId);
+        commentData.put("userEmail", userEmail);
+        commentData.put("comment", commentText);
+        commentData.put("postedDate", new Date());
+
+        // Add the comment data to Firestore
+        db.collection("comments").add(commentData)
+                .addOnSuccessListener(documentReference -> {
+                    String commentId = documentReference.getId(); // Get the ID of the newly created comment
+
+                    // Update the corresponding post document with the comment ID
+                    db.collection("posts").document(postId)
+                            .update("comments", FieldValue.arrayUnion(commentId))
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Comment posted successfully.", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Failed to update post with comment ID.", Toast.LENGTH_SHORT).show();
+                                Log.e("UpdatePost", "Error updating post with comment ID: " + e.getMessage());
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("PostComment", "Error posting comment: " + e.getMessage());
+                });
+
+    }
+
 
 
 }
