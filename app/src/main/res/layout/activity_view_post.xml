@@ -141,7 +141,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Community"
         app:layout_constraintVertical_bias="0.5" />
 
-    <TextView
+    <Spinner
         android:id="@+id/comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

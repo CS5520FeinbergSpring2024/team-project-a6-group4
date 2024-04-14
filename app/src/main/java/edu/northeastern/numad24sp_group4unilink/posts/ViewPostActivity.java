@@ -45,12 +45,12 @@ public class ViewPostActivity extends AppCompatActivity {
     private TextView eventTitle, eventDesc, editTextDate, editTextTime, eventlocation, eventTag;
     private ImageView eventImage;
     private Button Attend, Comment;
-    private Spinner attendeesSpinner;
+    private Spinner attendeesSpinner,commentsSpinner;
     String postId, userId, userEmail;
     FirebaseFirestore db;
     CollectionReference communitiesRef;
     String selectedCommunity;
-    Map<String, String> userIdToEmailMap;
+    Map<String, String> userIdToEmailMap, commentIdtoComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class ViewPostActivity extends AppCompatActivity {
         Attend= findViewById(R.id.Attend);
         Comment= findViewById(R.id.Comment);
         attendeesSpinner= findViewById(R.id.attendees);
-
+        commentsSpinner= findViewById(R.id.comments);
         db = FirebaseFirestore.getInstance();
 
         communitiesRef = db.collection("communities");
@@ -80,6 +80,7 @@ public class ViewPostActivity extends AppCompatActivity {
         // Trigger function to populate UI with Firestore data
         populateFieldsFromFirestore();
         populateSpinnerUsers();
+        populateSpinnerComments();
 
         // Assuming you have already initialized eventlocation TextView
         eventlocation.setOnClickListener(v -> {
@@ -262,6 +263,60 @@ public class ViewPostActivity extends AppCompatActivity {
                     });
                 }
                 Log.v( "ids", "user emails is " + userIdToEmailMap );
+
+
+            } else {
+                // Handle failure to retrieve users
+                Toast.makeText(getApplicationContext(), "Failed to retrieve users", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void populateSpinnerComments() {
+        commentIdtoComment = new HashMap<>();
+        List<String> commentIdsL=new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        commentsSpinner.setAdapter(adapter);
+        db.collection("posts").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String documentId = document.getId();
+                    if (documentId.equals(postId)) {
+                        List<String> comm = (List<String>) document.get("comments");
+                        if (comm != null) {
+                            commentIdsL.addAll(comm);
+                        }
+                        break;
+                    }
+                }
+                Log.v( "c ids", "comments ids is " + commentIdsL );
+
+                // Query the users collection to get names for each user ID
+                for (String commentId : commentIdsL) {
+                    db.collection("comments").document(commentId).get().addOnCompleteListener(commentTask -> {
+                        if (commentTask.isSuccessful()) {
+                            DocumentSnapshot commentDoc = commentTask.getResult();
+                            if (commentDoc.exists()) {
+                                String commentText = commentDoc.getString("comment");
+                                String author = commentDoc.getString("userEmail");
+                                if (commentText != null && !commentText.isEmpty()) {
+                                    String commentDisplay = author + " : " + commentText;
+                                    //USE RECYCLER VIEW HERFE INSTEAD
+
+                                    commentIdtoComment.put(commentId, commentDisplay);
+                                    adapter.add(commentDisplay);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            // Handle failure to retrieve comment
+                            Log.e("populateSpinnerComm", "Error getting comment: " + commentTask.getException());
+                        }
+                    });
+                }
+                Log.v( "ids", "comm emails is " + commentIdtoComment );
 
 
             } else {

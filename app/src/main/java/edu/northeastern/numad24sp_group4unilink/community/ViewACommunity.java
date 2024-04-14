@@ -44,6 +44,7 @@ public class ViewACommunity extends AppCompatActivity {
         setContentView(R.layout.activity_view_acommunity);
         spinner = findViewById(R.id.spinner);
         spinnerUsers= findViewById(R.id.spinnerUsers);
+
         db = FirebaseFirestore.getInstance();
 
         // Get the commTag from the intent
