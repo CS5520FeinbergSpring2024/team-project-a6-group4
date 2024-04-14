@@ -21,13 +21,16 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import edu.northeastern.numad24sp_group4unilink.R;
 import android.content.Intent;
@@ -39,10 +42,12 @@ public class ViewPostActivity extends AppCompatActivity {
     private TextView eventTitle, eventDesc, editTextDate, editTextTime, eventlocation, eventTag;
     private ImageView eventImage;
     private Button Attend, Comment;
+    private Spinner attendeesSpinner;
     String postId, userId;
     FirebaseFirestore db;
     CollectionReference communitiesRef;
     String selectedCommunity;
+    Map<String, String> userIdToEmailMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,7 @@ public class ViewPostActivity extends AppCompatActivity {
         eventTag=findViewById(R.id.eventTag);
         Attend= findViewById(R.id.Attend);
         Comment= findViewById(R.id.Comment);
+        attendeesSpinner= findViewById(R.id.attendees);
 
         db = FirebaseFirestore.getInstance();
 
@@ -69,6 +75,7 @@ public class ViewPostActivity extends AppCompatActivity {
 
         // Trigger function to populate UI with Firestore data
         populateFieldsFromFirestore();
+        populateSpinnerUsers();
 
         // Assuming you have already initialized eventlocation TextView
         eventlocation.setOnClickListener(v -> {
@@ -199,5 +206,105 @@ public class ViewPostActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void populateSpinnerUsers() {
+        userIdToEmailMap = new HashMap<>();
+        List<String> userIdsL=new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        attendeesSpinner.setAdapter(adapter);
+        db.collection("posts").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String documentId = document.getId();
+                    if (documentId.equals(postId)) {
+                        List<String> users = (List<String>) document.get("attendees");
+                        if (users != null) {
+                            userIdsL.addAll(users);
+                        }
+                        break;
+                    }
+                }
+                Log.v( "ids", "user ids is " + userIdsL );
+
+                // Query the users collection to get names for each user ID
+                for (String user : userIdsL) {
+                    db.collection("users").whereEqualTo("userID", user).get().addOnCompleteListener(userTask -> {
+                        if (userTask.isSuccessful()) {
+                            Log.v("ids-name success", "user ids is " + user + " doc"+userTask.getResult());
+                            for (QueryDocumentSnapshot userDoc : userTask.getResult()) {
+                                String name = userDoc.getString("email");
+                                //sO here im only taking the id and email right, email form user, you have to take all attributes like photo when making recycler view for more info if you want
+
+                                //TAKE MORE THAN JUST EMAIL, save as a user and use a RECYCLER VIEW HERE
+                                Log.v("ids-name",name);
+                                if (name != null && !name.isEmpty()) {
+                                    // Save the mapping of userID to name for later use
+                                    userIdToEmailMap.put(user, name);
+                                    adapter.add(name);
+                                    Log.v("ids-name", "user ids is " + user + " name: " + name);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            // Handle failure to retrieve user's name
+                            Log.e("populateSpinnerUsers", "Error getting user's name: " + userTask.getException());
+                        }
+                    });
+                }
+                Log.v( "ids", "user emails is " + userIdToEmailMap );
+
+
+            } else {
+                // Handle failure to retrieve users
+                Toast.makeText(getApplicationContext(), "Failed to retrieve users", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void populateAttendeesSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        attendeesSpinner.setAdapter(adapter);
+
+        // Get the attendees for the specified post ID
+        db.collection("posts").document(postId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Get the list of attendee user IDs
+                    List<String> attendees = (List<String>) document.get("attendees");
+                    Log.v("attendees list: ",""+attendees );
+                    if (attendees != null && !attendees.isEmpty()) {
+                        // Query the users collection to get names for each attendee ID
+                        for (String attendeeId : attendees) {
+                            db.collection("users").document(attendeeId).get().addOnCompleteListener(userTask -> {
+                                if (userTask.isSuccessful()) {
+                                    DocumentSnapshot userDocument = userTask.getResult();
+                                    if (userDocument.exists()) {
+                                        String userEmail = userDocument.getString("email");
+                                        Log.v("attendee: ",""+userEmail );
+                                        if (userEmail != null && !userEmail.isEmpty()) {
+                                            adapter.add(userEmail);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                } else {
+                                    // Handle failure to retrieve attendee's email
+                                    Log.e("populateAttendeesSpinner", "Error getting attendee's email: " + userTask.getException());
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                // Handle failure to retrieve post document
+                Log.e("populateAttendeesSpinner", "Error getting post document: " + task.getException());
+            }
+        });
+    }
+
 
 }
