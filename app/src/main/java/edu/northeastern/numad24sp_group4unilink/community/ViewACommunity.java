@@ -136,10 +136,12 @@ public class ViewACommunity extends BaseActivity {
 
     private void init(Bundle savedInstanceState) {
 
+        joinCommButton.setText("Join "+commTag+" Community");
 
         createRecyclerView();
 
         if (savedInstanceState != null ) {
+            populateSpinnerUsers();
             if (eventList == null || eventList.size() == 0) {
 
                 String activity = savedInstanceState.getString("ACTIVITY");

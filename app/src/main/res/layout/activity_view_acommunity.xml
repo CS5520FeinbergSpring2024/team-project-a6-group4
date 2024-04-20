@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,59 +7,49 @@
     android:layout_height="match_parent"
     tools:context=".community.ViewACommunity">
 
-
-    <ImageView
-        android:id="@+id/communityImage"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/community"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <Spinner
-        android:id="@+id/spinnerUsers"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_style"
-        android:gravity="center"
-        android:padding="8dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/joinComm"
-        app:layout_constraintVertical_bias="0.037" />
+            <ImageView
+                android:id="@+id/communityImage"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/community"
+                android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/joinComm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join Community"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/communityImage"
-        app:layout_constraintVertical_bias="0.037" />
+            <Button
+                android:id="@+id/joinComm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join Community"
+                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/commEventsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerUsers"
-        app:layout_constraintVertical_bias="0.0" />
+            <Spinner
+                android:id="@+id/spinnerUsers"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commEventsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
